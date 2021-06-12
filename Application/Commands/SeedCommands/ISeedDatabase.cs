@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace Application.Commands
+namespace Application.Commands.SeedCommands
 {
     public interface ISeedDatabaseCommand
     {

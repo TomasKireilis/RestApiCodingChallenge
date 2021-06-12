@@ -5,11 +5,11 @@ using Domain;
 
 namespace Application.Commands.WeatherForecastCommands
 {
-    public class CreateWeatherForecastCommand : ICreateWeatherForecastCommand
+    public class UpdateWeatherForecastCommand : IUpdateWeatherForecastCommand
     {
         private readonly IWeatherForecastRepository _weatherForecastRepository;
 
-        public CreateWeatherForecastCommand(IWeatherForecastRepository weatherForecastRepository)
+        public UpdateWeatherForecastCommand(IWeatherForecastRepository weatherForecastRepository)
         {
             _weatherForecastRepository = weatherForecastRepository;
         }
@@ -26,7 +26,7 @@ namespace Application.Commands.WeatherForecastCommands
                 WindDirection = weatherForecastModel.WindDirection,
                 WindSpeed = weatherForecastModel.WindSpeed
             };
-            _weatherForecastRepository.AddWeatherForecast(weatherForecast);
+            _weatherForecastRepository.UpdateWeatherForecast(weatherForecast);
             await _weatherForecastRepository.SaveChanges();
         }
     }

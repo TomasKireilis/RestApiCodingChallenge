@@ -1,10 +1,11 @@
-﻿using Infrastructure.Services.WeatherForecast;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Models;
+using Infrastructure.Services.WeatherForecast;
 
-namespace Application.Commands
+namespace Application.Commands.SeedCommands
 {
     public class SeedDatabaseCommand : ISeedDatabaseCommand
     {

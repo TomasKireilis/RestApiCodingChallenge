@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Application
+namespace Application.Models
 {
     public class WeatherForecastModel
     {

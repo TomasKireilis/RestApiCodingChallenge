@@ -14,6 +14,7 @@ namespace Persistence
         public void Configure(EntityTypeBuilder<WeatherForecast> builder)
         {
             builder.HasKey(x => x.Id);
+            builder.HasAlternateKey(x => x.WeatherForecastId);
         }
     }
 }

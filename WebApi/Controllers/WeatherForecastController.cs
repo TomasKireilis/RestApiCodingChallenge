@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Application.Commands;
+using Application.Commands.WeatherForecastCommands;
+using Application.Models;
 
 namespace WebApi.Controllers
 {
@@ -26,7 +28,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public IEnumerable<WeatherForecastDto> Post([FromBody] WeatherForecastDto weatherForecastDto)
+        public void Post([FromBody] WeatherForecastModel weatherForecastDto)
         {
             _createWeatherForecastCommand.Execute(weatherForecastDto);
         }
