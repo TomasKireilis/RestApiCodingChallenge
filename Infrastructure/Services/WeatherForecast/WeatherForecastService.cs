@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Application.Models;
+using Application.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -25,9 +27,9 @@ namespace Infrastructure.Services.WeatherForecast
         /// <param name="locationId"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public async Task<WeatherForecastDto> GetForecastInRegion(int locationId, DateTime time)
+        public async Task<WeatherForecastModel> GetForecastInRegion(int locationId, DateTime time)
         {
-            List<WeatherForecastDto> weatherForecast;
+            List<WeatherForecastModel> weatherForecast;
 
             try
             {
@@ -36,7 +38,12 @@ namespace Infrastructure.Services.WeatherForecast
 
                 var content = await response.Content.ReadAsStreamAsync();
 
-                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastDto>>(content);
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                };
+
+                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastModel>>(content, options);
             }
             catch (Exception e)
             {
@@ -46,7 +53,7 @@ namespace Infrastructure.Services.WeatherForecast
 
             if (weatherForecast.Any())
             {
-                var closestTime = weatherForecast.OrderBy(t => Math.Abs((t.Created - time).Ticks)).First();
+                var closestTime = weatherForecast.OrderBy(t => Math.Abs((t.Date - time).Ticks)).First();
 
                 closestTime.LocationId = locationId;
 
@@ -54,12 +61,12 @@ namespace Infrastructure.Services.WeatherForecast
             }
             Console.WriteLine($"No data found in {locationId} time: {time}");
 
-            return new WeatherForecastDto();
+            return null;
         }
 
-        public async Task<List<WeatherForecastDto>> GetForecastsInRegion(List<int> locationIds, DateTime time)
+        public async Task<List<WeatherForecastModel>> GetForecastsInRegion(List<int> locationIds, DateTime time)
         {
-            List<WeatherForecastDto> weatherForecast = new List<WeatherForecastDto>();
+            List<WeatherForecastModel> weatherForecast = new List<WeatherForecastModel>();
 
             foreach (var locationId in locationIds)
             {

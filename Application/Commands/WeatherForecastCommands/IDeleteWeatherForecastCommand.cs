@@ -1,0 +1,9 @@
+﻿using System.Threading.Tasks;
+
+namespace Application.Commands.WeatherForecastCommands
+{
+    public interface IDeleteWeatherForecastCommand
+    {
+        Task Execute(long id);
+    }
+}

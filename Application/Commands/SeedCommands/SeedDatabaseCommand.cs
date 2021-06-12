@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Models;
-using Infrastructure.Services.WeatherForecast;
+using Application.Services;
 
 namespace Application.Commands.SeedCommands
 {
@@ -23,18 +23,7 @@ namespace Application.Commands.SeedCommands
         {
             var weatherForecasts = await _weatherForecastService.GetForecastsInRegion(_locationsId, DateTime.Now);
 
-            var weatherForecastModels = weatherForecasts.Select(x => new WeatherForecastModel(x.LocationId)
-            {
-                AirPressure = x.AirPressure,
-                Date = x.Created,
-                Id = x.Id,
-                LocationId = x.LocationId,
-                WeatherState = x.WeatherStateName,
-                WindDirection = x.WindDirection,
-                WindSpeed = x.WindSpeed
-            }).ToList();
-
-            await _seeder.Seed(weatherForecastModels);
+            await _seeder.Seed(weatherForecasts);
         }
     }
 }

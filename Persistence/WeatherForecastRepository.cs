@@ -9,7 +9,7 @@ using Domain;
 
 namespace Persistence
 {
-    internal class WeatherForecastRepository : IWeatherForecastRepository
+    public class WeatherForecastRepository : IWeatherForecastRepository
     {
         private readonly WeatherForecastContext _weatherForecastContext;
 

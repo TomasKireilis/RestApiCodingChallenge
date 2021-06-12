@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Models;
 
-namespace Infrastructure.Services.WeatherForecast
+namespace Application.Services
 {
     public interface IWeatherForecastService
     {
@@ -12,8 +13,8 @@ namespace Infrastructure.Services.WeatherForecast
         /// <param name="locationId"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        Task<WeatherForecastDto> GetForecastInRegion(int locationId, DateTime time);
+        Task<WeatherForecastModel> GetForecastInRegion(int locationId, DateTime time);
 
-        Task<List<WeatherForecastDto>> GetForecastsInRegion(List<int> locationIds, DateTime time);
+        Task<List<WeatherForecastModel>> GetForecastsInRegion(List<int> locationIds, DateTime time);
     }
 }

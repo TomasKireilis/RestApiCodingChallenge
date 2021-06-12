@@ -1,48 +1,57 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using Application.Commands;
-using Application.Commands.WeatherForecastCommands;
+﻿using Application.Commands.WeatherForecastCommands;
 using Application.Models;
+using Application.Queries;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DataController : ControllerBase
+    public class WeatherForecastController : ControllerBase
     {
-        private readonly ILogger<DataController> _logger;
+        private readonly ILogger<WeatherForecastController> _logger;
 
         private readonly ICreateWeatherForecastCommand _createWeatherForecastCommand;
+        private readonly IUpdateWeatherForecastCommand _updateWeatherForecastCommand;
+        private readonly IDeleteWeatherForecastCommand _deleteWeatherForecastCommand;
+        private readonly IGetWeatherForecastQuery _getWeatherForecastQuery;
 
-        public DataController(ILogger<DataController> logger, ICreateWeatherForecastCommand createWeatherForecastCommand)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+            ICreateWeatherForecastCommand createWeatherForecastCommand,
+            IUpdateWeatherForecastCommand updateWeatherForecastCommand,
+            IDeleteWeatherForecastCommand deleteWeatherForecastCommand,
+            IGetWeatherForecastQuery getWeatherForecastQuery)
         {
             _logger = logger;
             _createWeatherForecastCommand = createWeatherForecastCommand;
+            _updateWeatherForecastCommand = updateWeatherForecastCommand;
+            _deleteWeatherForecastCommand = deleteWeatherForecastCommand;
+            _getWeatherForecastQuery = getWeatherForecastQuery;
         }
 
-        [HttpGet]
-        public IEnumerable<WeatherForecastDto> Get()
+        [HttpGet("{id}")]
+        public WeatherForecastModel Get(long id)
         {
-            return null;
+            return _getWeatherForecastQuery.Execute(id);
         }
 
         [HttpPost]
-        public void Post([FromBody] WeatherForecastModel weatherForecastDto)
+        public void Post([FromBody] WeatherForecastModel weatherForecast)
         {
-            _createWeatherForecastCommand.Execute(weatherForecastDto);
+            _createWeatherForecastCommand.Execute(weatherForecast);
         }
 
         [HttpPut]
-        public IEnumerable<WeatherForecastDto> Put()
+        public void Put([FromBody] WeatherForecastModel weatherForecast)
         {
-            return null;
+            _updateWeatherForecastCommand.Execute(weatherForecast);
         }
 
-        [HttpDelete]
-        public IEnumerable<WeatherForecastDto> Delete()
+        [HttpDelete("{id}")]
+        public void Delete(long id)
         {
-            return null;
+            _deleteWeatherForecastCommand.Execute(id);
         }
     }
 }

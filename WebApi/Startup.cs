@@ -10,6 +10,10 @@ using Microsoft.Extensions.Hosting;
 using Persistence;
 using System.Net.Http;
 using Application.Commands.SeedCommands;
+using Application.Commands.WeatherForecastCommands;
+using Application.Queries;
+using Application.Repositories;
+using Application.Services;
 
 namespace WebApi
 {
@@ -28,6 +32,7 @@ namespace WebApi
             services.AddControllers();
 
             services.AddTransient<IDataSeeder, WeatherForecastDataSeeder>();
+            services.AddTransient<IWeatherForecastRepository, WeatherForecastRepository>();
             services.AddTransient<HttpClient>();
 
             services.AddTransient<IWeatherForecastService>(x => new WeatherForecastService(
@@ -39,9 +44,14 @@ namespace WebApi
                 opt => opt.UseSqlServer(Configuration["ConnectionStrings:LocalDbConnectionString"]));
 
             //Queries
-            services.AddTransient<ISeedDatabaseCommand, SeedDatabaseCommand>();
+            services.AddTransient<IGetWeatherForecastQuery, GetWeatherForecastQuery>();
 
             //Commands
+            services.AddTransient<ICreateWeatherForecastCommand, CreateWeatherForecastCommand>();
+            services.AddTransient<IUpdateWeatherForecastCommand, UpdateWeatherForecastCommand>();
+            services.AddTransient<IDeleteWeatherForecastCommand, DeleteWeatherForecastCommand>();
+
+            services.AddTransient<ISeedDatabaseCommand, SeedDatabaseCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
