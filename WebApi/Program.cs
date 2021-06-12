@@ -1,3 +1,6 @@
+using System.Threading.Tasks;
+using Application;
+using Application.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,11 +9,11 @@ namespace WebApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            RunSeeding(host);
-            host.Run();
+            await RunSeeding(host);
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -20,12 +23,12 @@ namespace WebApi
                     webBuilder.UseStartup<Startup>();
                 });
 
-        private static void RunSeeding(IHost host)
+        private static async Task RunSeeding(IHost host)
         {
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
             using var scope = scopeFactory.CreateScope();
-            var seeder = scope.ServiceProvider.GetRequiredService<IDataSeeder>();
-            seeder.Seed();
+            var seeder = scope.ServiceProvider.GetRequiredService<ISeedDatabaseCommand>();
+            await seeder.Execute();
         }
     }
 }

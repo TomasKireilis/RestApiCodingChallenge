@@ -1,20 +1,16 @@
+using System;
+using Application;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Application;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
-using WebApi.Services;
+using System.Net.Http;
+using Application.Commands;
+using Common;
+using Infrastructure.Services.WeatherForecast;
 
 namespace WebApi
 {
@@ -31,10 +27,23 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddTransient<IWeatherForecastService, WeatherForecastService>();
+
             services.AddTransient<IDataSeeder, WeatherForecastDataSeeder>();
             services.AddTransient<HttpClient>();
-            services.AddPooledDbContextFactory<MyShopContext>(opt => opt.UseSqlServer(Configuration["ConnectionStrings:LocalDbConnectionString"]));
+            services.AddTransient<IDateService, DateService>();
+
+            services.AddTransient<IWeatherForecastService>(x => new WeatherForecastService(
+                x.GetRequiredService<HttpClient>(),
+                x.GetRequiredService<IDateService>(),
+                Configuration["ConnectionStrings:WeatherForecastServiceBaseUrl"]));
+
+            services.AddDbContext<WeatherForecastContext>(
+                opt => opt.UseSqlServer(Configuration["ConnectionStrings:LocalDbConnectionString"]));
+
+            //Queries
+            services.AddTransient<ISeedDatabaseCommand, SeedDatabaseCommand>();
+
+            //Commands
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

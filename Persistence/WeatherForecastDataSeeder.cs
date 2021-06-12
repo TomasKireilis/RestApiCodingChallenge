@@ -1,31 +1,44 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using Application;
-using Microsoft.EntityFrameworkCore;
-using WebApi.Services;
+using Domain;
+using Infrastructure.Services.WeatherForecast;
 
 namespace Persistence
 {
     public class WeatherForecastDataSeeder : IDataSeeder
     {
-        private readonly MyShopContext _ctx;
+        private readonly WeatherForecastContext _weatherForecastContext;
         private readonly IWeatherForecastService _weatherForecastService;
         private readonly List<int> _locationIds = new List<int>() { 44501, 12451 };
 
-        public WeatherForecastDataSeeder(IDbContextFactory<MyShopContext> ctx, IWeatherForecastService weatherForecastService)
+        public WeatherForecastDataSeeder(WeatherForecastContext weatherForecastContext, IWeatherForecastService weatherForecastService)
         {
             _weatherForecastService = weatherForecastService;
-            _ctx = ctx.CreateDbContext();
+            _weatherForecastContext = weatherForecastContext;
         }
 
-        public void Seed()
+        public void Seed(List<WeatherForecastModel> weatherForecastModels)
         {
             Console.WriteLine("Creating db...");
-            _ctx.Database.EnsureCreated();
+            _weatherForecastContext.Database.EnsureCreated();
             Console.WriteLine("Seeding...");
-            if (!_ctx.WeatherForecast.Any())
+            if (_weatherForecastContext.WeatherForecast.Any())
             {
-                var weatherForecasts = _weatherForecastService.GetForecastsInRegion(_locationIds);
+                var weatherForecasts = weatherForecastModels.Select(x => new WeatherForecast(x.LocationId)
+                {
+                    AirPressure = x.AirPressure,
+                    ApplicableDate = x.ApplicableDate,
+                    Id = x.Id,
+                    LocationId = x.LocationId,
+                    WeatherStateAbbr = x.WeatherStateAbbr,
+                    WeatherStateName = x.WeatherStateName,
+                    WindDirection = x.WindDirection,
+                    WindSpeed = x.WindSpeed
+                }).ToList();
+                _weatherForecastContext.WeatherForecast.AddRangeAsync(weatherForecasts);
             }
         }
     }

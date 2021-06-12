@@ -1,10 +1,11 @@
+using Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class MyShopContext : DbContext
+    public class WeatherForecastContext : DbContext
     {
-        public MyShopContext(DbContextOptions contextOptions) : base(contextOptions)
+        public WeatherForecastContext(DbContextOptions contextOptions) : base(contextOptions)
         {
         }
 
