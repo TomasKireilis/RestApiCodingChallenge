@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using Application.Commands;
 
 namespace WebApi.Controllers
 {
@@ -10,31 +11,34 @@ namespace WebApi.Controllers
     {
         private readonly ILogger<DataController> _logger;
 
-        public DataController(ILogger<DataController> logger)
+        private readonly ICreateWeatherForecastCommand _createWeatherForecastCommand;
+
+        public DataController(ILogger<DataController> logger, ICreateWeatherForecastCommand createWeatherForecastCommand)
         {
             _logger = logger;
+            _createWeatherForecastCommand = createWeatherForecastCommand;
         }
 
         [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
+        public IEnumerable<WeatherForecastDto> Get()
         {
             return null;
         }
 
         [HttpPost]
-        public IEnumerable<WeatherForecast> Post()
+        public IEnumerable<WeatherForecastDto> Post([FromBody] WeatherForecastDto weatherForecastDto)
         {
-            return null;
+            _createWeatherForecastCommand.Execute(weatherForecastDto);
         }
 
         [HttpPut]
-        public IEnumerable<WeatherForecast> Put()
+        public IEnumerable<WeatherForecastDto> Put()
         {
             return null;
         }
 
         [HttpDelete]
-        public IEnumerable<WeatherForecast> Delete()
+        public IEnumerable<WeatherForecastDto> Delete()
         {
             return null;
         }
