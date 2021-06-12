@@ -1,5 +1,5 @@
 ﻿using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Infrastructure.Services.WeatherForecast
 {
@@ -10,27 +10,31 @@ namespace Infrastructure.Services.WeatherForecast
             LocationId = locationId;
         }
 
-        [JsonProperty("id")]
-        public int Id { get; set; }
+        public WeatherForecastDto()
+        {
+        }
+
+        [JsonPropertyName("id")]
+        public long Id { get; set; }
 
         public int LocationId { get; set; }
 
-        [JsonProperty("applicable_date")]
-        public DateTime ApplicableDate { get; set; }
+        [JsonPropertyName("created")]
+        public DateTime Created { get; set; }
 
-        [JsonProperty("weather_state_name")]
+        [JsonPropertyName("weather_state_name")]
         public string WeatherStateName { get; set; }
 
-        [JsonProperty("weather_state_abbr")]
+        [JsonPropertyName("weather_state_abbr")]
         public string WeatherStateAbbr { get; set; }
 
-        [JsonProperty("wind_speed")]
+        [JsonPropertyName("wind_speed")]
         public float WindSpeed { get; set; }
 
-        [JsonProperty("wind_direction")]
+        [JsonPropertyName("wind_direction")]
         public float WindDirection { get; set; }
 
-        [JsonProperty("air_pressure")]
+        [JsonPropertyName("air_pressure")]
         public float AirPressure { get; set; }
     }
 }

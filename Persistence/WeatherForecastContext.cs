@@ -10,5 +10,11 @@ namespace Persistence
         }
 
         public DbSet<WeatherForecast> WeatherForecast { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfiguration(new WeatherForecastConfiguration());
+        }
     }
 }

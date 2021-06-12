@@ -1,24 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Common;
 
 namespace Infrastructure.Services.WeatherForecast
 {
     public class WeatherForecastService : IWeatherForecastService
     {
         private readonly HttpClient _httpClient;
-        private readonly IDateService _dateService;
         private readonly string _requestBaseUrl;
-        private readonly string _datePattern = "yy/MM/dd";
 
-        public WeatherForecastService(HttpClient httpClient, IDateService dateService, string requestBaseUrl)
+        public WeatherForecastService(HttpClient httpClient, string requestBaseUrl)
         {
             _httpClient = httpClient;
-            _dateService = dateService;
+
             _requestBaseUrl = requestBaseUrl;
         }
 
@@ -28,16 +25,18 @@ namespace Infrastructure.Services.WeatherForecast
         /// <param name="locationId"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        public async Task<List<WeatherForecastDto>> GetForecastsInRegion(int locationId, DateTime time)
+        public async Task<WeatherForecastDto> GetForecastInRegion(int locationId, DateTime time)
         {
-            List<WeatherForecastDto> weatherForecast = null;
+            List<WeatherForecastDto> weatherForecast;
 
             try
             {
                 var response = await _httpClient.GetAsync(
-                    $"{_requestBaseUrl}/location/{locationId}/{_dateService.GetDateInFormat(time, _datePattern)}");
+                    $"{_requestBaseUrl}/location/{locationId}/{time.Year}/{time.Month}/{time.Day}");
 
-                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastDto>>(await response.Content.ReadAsStreamAsync());
+                var content = await response.Content.ReadAsStreamAsync();
+
+                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastDto>>(content);
             }
             catch (Exception e)
             {
@@ -45,16 +44,27 @@ namespace Infrastructure.Services.WeatherForecast
                 throw;
             }
 
-            return weatherForecast = new List<WeatherForecastDto>();
+            if (weatherForecast.Any())
+            {
+                var closestTime = weatherForecast.OrderBy(t => Math.Abs((t.Created - time).Ticks)).First();
+
+                closestTime.LocationId = locationId;
+
+                return closestTime;
+            }
+            Console.WriteLine($"No data found in {locationId} time: {time}");
+
+            return new WeatherForecastDto();
         }
 
         public async Task<List<WeatherForecastDto>> GetForecastsInRegion(List<int> locationIds, DateTime time)
         {
             List<WeatherForecastDto> weatherForecast = new List<WeatherForecastDto>();
+
             foreach (var locationId in locationIds)
             {
-                var response = await GetForecastsInRegion(locationId, time);
-                weatherForecast.AddRange(response);
+                var response = await GetForecastInRegion(locationId, time);
+                weatherForecast.Add(response);
             }
 
             return weatherForecast;

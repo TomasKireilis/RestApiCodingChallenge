@@ -1,9 +1,8 @@
-using System.Threading.Tasks;
-using Application;
 using Application.Commands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
 
 namespace WebApi
 {

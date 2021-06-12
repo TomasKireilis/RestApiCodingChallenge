@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Infrastructure.Services.WeatherForecast;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Infrastructure.Services.WeatherForecast;
 
 namespace Application.Commands
 {
@@ -21,19 +21,18 @@ namespace Application.Commands
         public async Task Execute()
         {
             var weatherForecasts = await _weatherForecastService.GetForecastsInRegion(_locationsId, DateTime.Now);
+
             var weatherForecastModels = weatherForecasts.Select(x => new WeatherForecastModel(x.LocationId)
             {
                 AirPressure = x.AirPressure,
-                ApplicableDate = x.ApplicableDate,
+                Date = x.Created,
                 Id = x.Id,
                 LocationId = x.LocationId,
-                WeatherStateAbbr = x.WeatherStateAbbr,
-                WeatherStateName = x.WeatherStateName,
                 WindDirection = x.WindDirection,
                 WindSpeed = x.WindSpeed
             }).ToList();
 
-            _seeder.Seed(weatherForecastModels);
+            await _seeder.Seed(weatherForecastModels);
         }
     }
 }

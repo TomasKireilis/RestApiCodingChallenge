@@ -12,7 +12,7 @@ namespace Infrastructure.Services.WeatherForecast
         /// <param name="locationId"></param>
         /// <param name="time"></param>
         /// <returns></returns>
-        Task<List<WeatherForecastDto>> GetForecastsInRegion(int locationId, DateTime time);
+        Task<WeatherForecastDto> GetForecastInRegion(int locationId, DateTime time);
 
         Task<List<WeatherForecastDto>> GetForecastsInRegion(List<int> locationIds, DateTime time);
     }
