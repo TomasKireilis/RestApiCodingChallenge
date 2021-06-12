@@ -28,6 +28,7 @@ namespace Application.Commands
                 Date = x.Created,
                 Id = x.Id,
                 LocationId = x.LocationId,
+                WeatherState = x.WeatherStateName,
                 WindDirection = x.WindDirection,
                 WindSpeed = x.WindSpeed
             }).ToList();

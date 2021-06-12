@@ -29,6 +29,7 @@ namespace Persistence
                     Date = x.Date,
                     WeatherForecastId = x.Id,
                     LocationId = x.LocationId,
+                    WeatherState = x.WeatherState,
                     WindDirection = x.WindDirection,
                     WindSpeed = x.WindSpeed
                 }).ToList();
