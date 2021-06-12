@@ -9,7 +9,12 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Application;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
+using WebApi.Services;
 
 namespace WebApi
 {
@@ -26,6 +31,10 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IWeatherForecastService, WeatherForecastService>();
+            services.AddTransient<IDataSeeder, WeatherForecastDataSeeder>();
+            services.AddTransient<HttpClient>();
+            services.AddPooledDbContextFactory<MyShopContext>(opt => opt.UseSqlServer(Configuration["ConnectionStrings:LocalDbConnectionString"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
