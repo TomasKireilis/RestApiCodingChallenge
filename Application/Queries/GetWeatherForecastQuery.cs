@@ -20,7 +20,7 @@ namespace Application.Queries
             {
                 throw new ArgumentException("no data exist");
             }
-            return new WeatherForecastModel(weatherForecast.LocationId)
+            return new WeatherForecastModel()
             {
                 AirPressure = weatherForecast.AirPressure,
                 Date = weatherForecast.Date,

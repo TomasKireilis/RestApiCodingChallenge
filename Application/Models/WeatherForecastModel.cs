@@ -4,14 +4,8 @@ namespace Application.Models
 {
     public class WeatherForecastModel
     {
-        //for deserialization
         public WeatherForecastModel()
         {
-        }
-
-        public WeatherForecastModel(int locationId)
-        {
-            LocationId = locationId;
         }
 
         public long Id { get; set; }
