@@ -1,6 +1,6 @@
-﻿using System;
-using Application.Models;
+﻿using Application.Models;
 using Application.Repositories;
+using System;
 
 namespace Application.Queries
 {

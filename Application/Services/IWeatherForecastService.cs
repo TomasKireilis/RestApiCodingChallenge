@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Application.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Application.Models;
 
 namespace Application.Services
 {

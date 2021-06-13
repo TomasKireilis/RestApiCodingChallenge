@@ -1,5 +1,9 @@
 using Application;
-using Application.Commands;
+using Application.Commands.SeedCommands;
+using Application.Commands.WeatherForecastCommands;
+using Application.Queries;
+using Application.Repositories;
+using Application.Services;
 using Infrastructure.Services.WeatherForecast;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,11 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
 using System.Net.Http;
-using Application.Commands.SeedCommands;
-using Application.Commands.WeatherForecastCommands;
-using Application.Queries;
-using Application.Repositories;
-using Application.Services;
 
 namespace WebApi
 {

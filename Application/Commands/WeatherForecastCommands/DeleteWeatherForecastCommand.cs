@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Application.Models;
-using Application.Repositories;
-using Domain;
+﻿using Application.Repositories;
 
 namespace Application.Commands.WeatherForecastCommands
 {

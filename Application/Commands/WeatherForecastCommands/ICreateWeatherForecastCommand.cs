@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Application.Models;
+﻿using Application.Models;
 
 namespace Application.Commands.WeatherForecastCommands
 {

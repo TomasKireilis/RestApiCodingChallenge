@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-using Application.Repositories;
+﻿using Application.Repositories;
 using Domain;
+using System;
+using System.Linq;
 
 namespace Persistence
 {

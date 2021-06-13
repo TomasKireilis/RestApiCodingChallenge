@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Application.Commands.WeatherForecastCommands
+﻿namespace Application.Commands.WeatherForecastCommands
 {
     public interface IDeleteWeatherForecastCommand
     {
