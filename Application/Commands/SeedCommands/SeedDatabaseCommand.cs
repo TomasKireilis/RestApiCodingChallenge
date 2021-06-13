@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.SeedCommands
 {
@@ -9,12 +10,14 @@ namespace Application.Commands.SeedCommands
     {
         private readonly IDataSeeder _seeder;
         private readonly IWeatherForecastService _weatherForecastService;
+        private readonly ILogger<SeedDatabaseCommand> _logger;
         private readonly List<int> _locationsId = new List<int>() { 44418, 2487956 };
 
-        public SeedDatabaseCommand(IDataSeeder seeder, IWeatherForecastService weatherForecastService)
+        public SeedDatabaseCommand(IDataSeeder seeder, IWeatherForecastService weatherForecastService, ILogger<SeedDatabaseCommand> logger)
         {
             _seeder = seeder;
             _weatherForecastService = weatherForecastService;
+            _logger = logger;
         }
 
         public async Task Execute()
@@ -26,7 +29,7 @@ namespace Application.Commands.SeedCommands
                 await _seeder.Seed(weatherForecasts);
                 return;
             }
-            Console.WriteLine("Seeding was skipped. Existing data found");
+            _logger.LogInformation("Seeding skipped. Existing data found");
         }
     }
 }

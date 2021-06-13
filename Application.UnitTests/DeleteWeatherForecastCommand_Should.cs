@@ -12,7 +12,7 @@ namespace Application.UnitTests
 
     {
         [Fact]
-        public void Send_CorrectData_Repository()
+        public void Delete_CorrectData_Repository()
         {
             //setup
             var id = 50;

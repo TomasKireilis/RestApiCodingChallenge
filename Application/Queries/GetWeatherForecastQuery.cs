@@ -18,7 +18,7 @@ namespace Application.Queries
             var weatherForecast = _weatherForecastRepository.GetWeatherForecast(id);
             if (weatherForecast == null)
             {
-                throw new ArgumentException("no data exist");
+                return null;
             }
             return new WeatherForecastModel()
             {

@@ -1,16 +1,19 @@
 ﻿using Application.Models;
 using Application.Repositories;
 using Domain;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Commands.WeatherForecastCommands
 {
     public class UpdateWeatherForecastCommand : IUpdateWeatherForecastCommand
     {
         private readonly IWeatherForecastRepository _weatherForecastRepository;
+        private readonly ILogger<UpdateWeatherForecastCommand> _logger;
 
-        public UpdateWeatherForecastCommand(IWeatherForecastRepository weatherForecastRepository)
+        public UpdateWeatherForecastCommand(IWeatherForecastRepository weatherForecastRepository, ILogger<UpdateWeatherForecastCommand> logger)
         {
             _weatherForecastRepository = weatherForecastRepository;
+            _logger = logger;
         }
 
         public void Execute(WeatherForecastModel weatherForecastModel)
@@ -27,6 +30,7 @@ namespace Application.Commands.WeatherForecastCommands
             };
             _weatherForecastRepository.UpdateWeatherForecast(weatherForecast);
             _weatherForecastRepository.SaveChanges();
+            _logger.LogInformation("Updated weather forecast. Forecast id: {@id}", weatherForecast.WeatherForecastId);
         }
     }
 }

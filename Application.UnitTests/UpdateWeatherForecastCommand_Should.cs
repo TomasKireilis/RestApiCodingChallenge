@@ -16,7 +16,7 @@ namespace Application.UnitTests
         [InlineData(10, "2021-06-12T21:32:03.076320Z", 9999999, 90, "", 96.1f, 96f)]
         [InlineData(0, "2021-06-12T21:32:03.076320Z", 0, 0, "cold", 96.1f, 0f)]
         [InlineData(12.5, "2021-06-12T21:32:03.076320Z", 1, 90, null, 96.1f, -9f)]
-        public void Send_CorrectData_Repository(float airPressure, string dateString, long id, int locationId, string weatherState, float windDirection, float windSpeed)
+        public void Update_CorrectData_Repository(float airPressure, string dateString, long id, int locationId, string weatherState, float windDirection, float windSpeed)
         {
             //setup
             var date = DateTime.Parse(dateString);

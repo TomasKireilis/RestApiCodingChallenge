@@ -1,6 +1,8 @@
-﻿using Application.Commands.WeatherForecastCommands;
+﻿using System;
+using Application.Commands.WeatherForecastCommands;
 using Application.Models;
 using Application.Queries;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -31,27 +33,40 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public WeatherForecastModel Get(long id)
+        public ActionResult<WeatherForecastModel> GetWeatherForecast(long id)
         {
-            return _getWeatherForecastQuery.Execute(id);
+            _logger.LogInformation("Get WeatherForecast api called id {@id}", id);
+
+            var response = _getWeatherForecastQuery.Execute(id);
+            if (response == null)
+            {
+                return NotFound();
+            }
+            return Ok(response);
         }
 
         [HttpPost]
-        public void Post([FromBody] WeatherForecastModel weatherForecast)
+        public ActionResult PostWeatherForecast([FromBody] WeatherForecastModel weatherForecast)
         {
+            _logger.LogInformation("Post WeatherForecast api called id {@id}", weatherForecast.Id);
             _createWeatherForecastCommand.Execute(weatherForecast);
+            return Ok();
         }
 
         [HttpPut]
-        public void Put([FromBody] WeatherForecastModel weatherForecast)
+        public ActionResult PutWeatherForecast([FromBody] WeatherForecastModel weatherForecast)
         {
+            _logger.LogInformation("Put WeatherForecast api called id {@id}", weatherForecast.Id);
             _updateWeatherForecastCommand.Execute(weatherForecast);
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public void Delete(long id)
+        public ActionResult DeleteWeatherForecast(long id)
         {
+            _logger.LogInformation("Delete WeatherForecast api called id {@id}", id);
             _deleteWeatherForecastCommand.Execute(id);
+            return Ok();
         }
     }
 }

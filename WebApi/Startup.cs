@@ -1,3 +1,4 @@
+using System.IO;
 using Application;
 using Application.Commands.SeedCommands;
 using Application.Commands.WeatherForecastCommands;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Persistence;
 using System.Net.Http;
+using Microsoft.Extensions.Logging;
 
 namespace WebApi
 {
@@ -54,8 +56,11 @@ namespace WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            var path = Directory.GetCurrentDirectory();
+            loggerFactory.AddFile($"{path}\\Logs\\AppLogs.txt");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

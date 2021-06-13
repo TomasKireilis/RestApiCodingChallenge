@@ -13,7 +13,7 @@ namespace Application.UnitTests
 
     {
         [Fact]
-        public void Send_CorrectData_Repository()
+        public void Get_CorrectData_Repository()
         {
             //setup
             var id = 50;
@@ -56,6 +56,25 @@ namespace Application.UnitTests
                         response.WeatherState == forecastApplicationModel.WeatherState &&
                         response.WindDirection == forecastApplicationModel.WindDirection &&
                         response.WindSpeed == forecastApplicationModel.WindSpeed);
+        }
+
+        [Fact]
+        public void ReturnNull_NoDataExistInRepository()
+        {
+            //setup
+            var id = 50;
+
+            var repositoryMock = new Mock<IWeatherForecastRepository>();
+
+            repositoryMock.Setup(x => x.GetWeatherForecast(id)).Returns((WeatherForecast)null);
+
+            var getWeatherForecastQuery = new GetWeatherForecastQuery(repositoryMock.Object);
+
+            //act
+            var response = getWeatherForecastQuery.Execute(id);
+
+            //Assert
+            Assert.Null(response);
         }
     }
 }

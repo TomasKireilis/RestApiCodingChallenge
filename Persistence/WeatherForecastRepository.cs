@@ -2,16 +2,19 @@
 using Domain;
 using System;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace Persistence
 {
     public class WeatherForecastRepository : IWeatherForecastRepository
     {
         private readonly WeatherForecastContext _weatherForecastContext;
+        private readonly ILogger<WeatherForecastRepository> _logger;
 
-        public WeatherForecastRepository(WeatherForecastContext weatherForecastContext)
+        public WeatherForecastRepository(WeatherForecastContext weatherForecastContext, ILogger<WeatherForecastRepository> logger)
         {
             _weatherForecastContext = weatherForecastContext;
+            _logger = logger;
         }
 
         public void AddWeatherForecast(WeatherForecast weatherForecast)
@@ -19,10 +22,12 @@ namespace Persistence
             try
             {
                 UpdateWeatherForecast(weatherForecast);
+                _logger.LogInformation("Found existing weather forecast. Updating existing record. Forecast id: {@id}", weatherForecast.WeatherForecastId);
             }
             catch (ArgumentException e)
             {
                 _weatherForecastContext.WeatherForecast.AddAsync(weatherForecast);
+                _logger.LogInformation("Adding new weather forecast to repository. Forecast id: {@id}", weatherForecast.WeatherForecastId);
             }
         }
 
@@ -37,9 +42,10 @@ namespace Persistence
                 trackedWeatherForecast.WeatherState = weatherForecast.WeatherState;
                 trackedWeatherForecast.WindDirection = weatherForecast.WindDirection;
                 trackedWeatherForecast.WindSpeed = weatherForecast.WindSpeed;
-
+                _logger.LogInformation("Updating weather forecast in repository. Forecast id: {@id}", weatherForecast.WeatherForecastId);
                 return;
             }
+            _logger.LogInformation("Can not update weather forecast. Weather forecast was not found. Forecast id: {@id}", weatherForecast.WeatherForecastId);
             throw new ArgumentException("Weather forecast was not found");
         }
 
@@ -53,8 +59,11 @@ namespace Persistence
             var trackedWeatherForecast = _weatherForecastContext.WeatherForecast.SingleOrDefault(b => b.WeatherForecastId == id);
             if (trackedWeatherForecast != null)
             {
+                _logger.LogInformation("Deleting weather forecast in repository. Forecast id: {@id}", id);
                 _weatherForecastContext.WeatherForecast.Remove(trackedWeatherForecast);
+                return;
             }
+            _logger.LogInformation("No existing record found for deletion. Forecast id: {@id}", id);
         }
 
         public void SaveChanges()
@@ -65,7 +74,8 @@ namespace Persistence
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError("Error while saving changes to database. {@error}", e.Message);
+                throw;
             }
         }
     }

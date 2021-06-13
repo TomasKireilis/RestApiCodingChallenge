@@ -5,16 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Persistence
 {
     public class WeatherForecastDataSeeder : IDataSeeder
     {
         private readonly WeatherForecastContext _weatherForecastContext;
+        private readonly ILogger<WeatherForecastDataSeeder> _logger;
 
-        public WeatherForecastDataSeeder(WeatherForecastContext weatherForecastContext)
+        public WeatherForecastDataSeeder(WeatherForecastContext weatherForecastContext, ILogger<WeatherForecastDataSeeder> logger)
         {
             _weatherForecastContext = weatherForecastContext;
+            _logger = logger;
         }
 
         public async Task<bool> AlreadySeeded()
@@ -25,7 +28,7 @@ namespace Persistence
 
         public async Task Seed(List<WeatherForecastModel> weatherForecastModels)
         {
-            Console.WriteLine("Seeding...");
+            _logger.LogInformation("Started seeding");
             if (!await AlreadySeeded())
             {
                 var weatherForecasts = weatherForecastModels.Select(x => new WeatherForecast()
@@ -42,6 +45,7 @@ namespace Persistence
             }
 
             await _weatherForecastContext.SaveChangesAsync();
+            _logger.LogInformation("Seeding Finished");
         }
     }
 }
