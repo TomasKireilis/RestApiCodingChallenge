@@ -1,15 +1,20 @@
+using Application;
+using Application.Commands.SeedCommands;
+using Application.Commands.WeatherForecastCommands;
+using Application.Queries;
+using Application.Repositories;
+using Application.Services;
+using Infrastructure.Services.WeatherForecast;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Persistence;
+using System.IO;
+using System.Net.Http;
 
 namespace WebApi
 {
@@ -26,11 +31,36 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddTransient<IDataSeeder, WeatherForecastDataSeeder>();
+            services.AddTransient<IWeatherForecastRepository, WeatherForecastRepository>();
+            services.AddTransient<HttpClient>();
+
+            services.AddTransient<IWeatherForecastService>(x => new WeatherForecastService(
+                x.GetRequiredService<HttpClient>(),
+                x.GetRequiredService<ILogger<WeatherForecastService>>(),
+                Configuration["ConnectionStrings:WeatherForecastServiceBaseUrl"]));
+
+            services.AddDbContext<WeatherForecastContext>(
+                opt => opt.UseSqlServer(Configuration["ConnectionStrings:LocalDbConnectionString"]));
+
+            //Queries
+            services.AddTransient<IGetWeatherForecastQuery, GetWeatherForecastQuery>();
+
+            //Commands
+            services.AddTransient<ICreateWeatherForecastCommand, CreateWeatherForecastCommand>();
+            services.AddTransient<IUpdateWeatherForecastCommand, UpdateWeatherForecastCommand>();
+            services.AddTransient<IDeleteWeatherForecastCommand, DeleteWeatherForecastCommand>();
+
+            services.AddTransient<ISeedDatabaseCommand, SeedDatabaseCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
+            var path = Directory.GetCurrentDirectory();
+            loggerFactory.AddFile($"{path}\\Logs\\AppLogs.txt");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
