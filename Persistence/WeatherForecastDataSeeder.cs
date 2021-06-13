@@ -17,12 +17,16 @@ namespace Persistence
             _weatherForecastContext = weatherForecastContext;
         }
 
+        public async Task<bool> AlreadySeeded()
+        {
+            await _weatherForecastContext.Database.EnsureCreatedAsync();
+            return _weatherForecastContext.WeatherForecast.Any();
+        }
+
         public async Task Seed(List<WeatherForecastModel> weatherForecastModels)
         {
-            Console.WriteLine("Creating db...");
-            _weatherForecastContext.Database.EnsureCreated();
             Console.WriteLine("Seeding...");
-            if (!_weatherForecastContext.WeatherForecast.Any())
+            if (!await AlreadySeeded())
             {
                 var weatherForecasts = weatherForecastModels.Select(x => new WeatherForecast()
                 {

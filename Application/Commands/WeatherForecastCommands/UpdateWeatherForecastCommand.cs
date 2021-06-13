@@ -14,7 +14,7 @@ namespace Application.Commands.WeatherForecastCommands
             _weatherForecastRepository = weatherForecastRepository;
         }
 
-        public async Task Execute(WeatherForecastModel weatherForecastModel)
+        public void Execute(WeatherForecastModel weatherForecastModel)
         {
             var weatherForecast = new WeatherForecast()
             {
@@ -27,7 +27,7 @@ namespace Application.Commands.WeatherForecastCommands
                 WindSpeed = weatherForecastModel.WindSpeed
             };
             _weatherForecastRepository.UpdateWeatherForecast(weatherForecast);
-            await _weatherForecastRepository.SaveChanges();
+            _weatherForecastRepository.SaveChanges();
         }
     }
 }

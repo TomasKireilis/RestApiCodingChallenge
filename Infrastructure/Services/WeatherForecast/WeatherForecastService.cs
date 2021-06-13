@@ -29,7 +29,7 @@ namespace Infrastructure.Services.WeatherForecast
         /// <returns></returns>
         public async Task<WeatherForecastModel> GetForecastInRegion(int locationId, DateTime time)
         {
-            List<WeatherForecastModel> weatherForecast;
+            List<WeatherForecastDto> weatherForecast;
 
             try
             {
@@ -38,12 +38,7 @@ namespace Infrastructure.Services.WeatherForecast
 
                 var content = await response.Content.ReadAsStreamAsync();
 
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                };
-
-                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastModel>>(content, options);
+                weatherForecast = await JsonSerializer.DeserializeAsync<List<WeatherForecastDto>>(content);
             }
             catch (Exception e)
             {
@@ -53,11 +48,22 @@ namespace Infrastructure.Services.WeatherForecast
 
             if (weatherForecast.Any())
             {
-                var closestTime = weatherForecast.OrderBy(t => Math.Abs((t.Date - time).Ticks)).First();
+                var closestWeatherForecastByTime = weatherForecast.OrderBy(t => Math.Abs((t.Date - time).Ticks)).First();
 
-                closestTime.LocationId = locationId;
+                closestWeatherForecastByTime.LocationId = locationId;
 
-                return closestTime;
+                var weatherForecastModel = new WeatherForecastModel()
+                {
+                    AirPressure = closestWeatherForecastByTime.AirPressure,
+                    Date = closestWeatherForecastByTime.Date,
+                    Id = closestWeatherForecastByTime.Id,
+                    LocationId = closestWeatherForecastByTime.LocationId,
+                    WeatherState = closestWeatherForecastByTime.WeatherState,
+                    WindDirection = closestWeatherForecastByTime.WindDirection,
+                    WindSpeed = closestWeatherForecastByTime.WindSpeed
+                };
+
+                return weatherForecastModel;
             }
             Console.WriteLine($"No data found in {locationId} time: {time}");
 

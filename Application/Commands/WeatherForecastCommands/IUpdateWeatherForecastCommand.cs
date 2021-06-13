@@ -5,6 +5,6 @@ namespace Application.Commands.WeatherForecastCommands
 {
     public interface IUpdateWeatherForecastCommand
     {
-        Task Execute(WeatherForecastModel weatherForecastModel);
+        void Execute(WeatherForecastModel weatherForecastModel);
     }
 }

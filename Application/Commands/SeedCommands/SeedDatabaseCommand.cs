@@ -21,9 +21,14 @@ namespace Application.Commands.SeedCommands
 
         public async Task Execute()
         {
-            var weatherForecasts = await _weatherForecastService.GetForecastsInRegion(_locationsId, DateTime.Now);
+            if (!await _seeder.AlreadySeeded())
+            {
+                var weatherForecasts = await _weatherForecastService.GetForecastsInRegion(_locationsId, DateTime.Now);
 
-            await _seeder.Seed(weatherForecasts);
+                await _seeder.Seed(weatherForecasts);
+                return;
+            }
+            Console.WriteLine("Seeding was skipped. Existing data found");
         }
     }
 }

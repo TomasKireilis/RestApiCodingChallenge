@@ -41,6 +41,7 @@ namespace Persistence
                 trackedWeatherForecast.WeatherState = weatherForecast.WeatherState;
                 trackedWeatherForecast.WindDirection = weatherForecast.WindDirection;
                 trackedWeatherForecast.WindSpeed = weatherForecast.WindSpeed;
+
                 return;
             }
             throw new ArgumentException("Weather forecast was not found");
@@ -60,9 +61,16 @@ namespace Persistence
             }
         }
 
-        public async Task SaveChanges()
+        public void SaveChanges()
         {
-            await _weatherForecastContext.SaveChangesAsync();
+            try
+            {
+                _weatherForecastContext.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }

@@ -14,10 +14,10 @@ namespace Application.Commands.WeatherForecastCommands
             _weatherForecastRepository = weatherForecastRepository;
         }
 
-        public async Task Execute(long id)
+        public void Execute(long id)
         {
             _weatherForecastRepository.DeleteWeatherForecast(id);
-            await _weatherForecastRepository.SaveChanges();
+            _weatherForecastRepository.SaveChanges();
         }
     }
 }

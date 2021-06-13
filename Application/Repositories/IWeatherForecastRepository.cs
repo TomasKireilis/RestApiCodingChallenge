@@ -16,6 +16,6 @@ namespace Application.Repositories
 
         void DeleteWeatherForecast(long id);
 
-        Task SaveChanges();
+        void SaveChanges();
     }
 }
