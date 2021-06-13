@@ -4,6 +4,7 @@ using Application.Repositories;
 using Domain;
 using Moq;
 using System;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Application.UnitTests
@@ -32,15 +33,16 @@ namespace Application.UnitTests
                 WindSpeed = windSpeed,
             };
 
-            var repository = new Mock<IWeatherForecastRepository>();
+            var repositoryMock = new Mock<IWeatherForecastRepository>();
+            var loggerMock = new Mock<ILogger<UpdateWeatherForecastCommand>>();
 
-            var updateWeatherForecastCommand = new UpdateWeatherForecastCommand(repository.Object);
+            var updateWeatherForecastCommand = new UpdateWeatherForecastCommand(repositoryMock.Object, loggerMock.Object);
 
             //act
             updateWeatherForecastCommand.Execute(forecastApplicationModel);
 
             //Assert
-            repository.Verify(x => x.UpdateWeatherForecast(It.Is<WeatherForecast>(y =>
+            repositoryMock.Verify(x => x.UpdateWeatherForecast(It.Is<WeatherForecast>(y =>
               y.AirPressure == airPressure &&
               y.Date == date &&
               y.WeatherForecastId == id &&
@@ -50,7 +52,7 @@ namespace Application.UnitTests
               y.WindSpeed == windSpeed
                 )), Times.Once);
 
-            repository.Verify(x => x.SaveChanges(), Times.Once);
+            repositoryMock.Verify(x => x.SaveChanges(), Times.Once);
         }
     }
 }

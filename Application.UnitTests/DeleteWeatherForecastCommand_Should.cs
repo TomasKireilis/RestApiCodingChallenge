@@ -1,9 +1,7 @@
 using Application.Commands.WeatherForecastCommands;
-using Application.Models;
 using Application.Repositories;
-using Domain;
+using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using Xunit;
 
 namespace Application.UnitTests
@@ -17,8 +15,9 @@ namespace Application.UnitTests
             //setup
             var id = 50;
             var repositoryMock = new Mock<IWeatherForecastRepository>();
+            var loggerMock = new Mock<ILogger<DeleteWeatherForecastCommand>>();
 
-            var deleteWeatherForecastCommand = new DeleteWeatherForecastCommand(repositoryMock.Object);
+            var deleteWeatherForecastCommand = new DeleteWeatherForecastCommand(repositoryMock.Object, loggerMock.Object);
 
             //act
             deleteWeatherForecastCommand.Execute(id);

@@ -1,4 +1,3 @@
-using System.IO;
 using Application;
 using Application.Commands.SeedCommands;
 using Application.Commands.WeatherForecastCommands;
@@ -12,9 +11,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Persistence;
-using System.Net.Http;
 using Microsoft.Extensions.Logging;
+using Persistence;
+using System.IO;
+using System.Net.Http;
 
 namespace WebApi
 {
@@ -38,7 +38,7 @@ namespace WebApi
 
             services.AddTransient<IWeatherForecastService>(x => new WeatherForecastService(
                 x.GetRequiredService<HttpClient>(),
-
+                x.GetRequiredService<ILogger<WeatherForecastService>>(),
                 Configuration["ConnectionStrings:WeatherForecastServiceBaseUrl"]));
 
             services.AddDbContext<WeatherForecastContext>(

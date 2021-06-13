@@ -1,6 +1,5 @@
 ﻿using Application.Models;
 using Application.Repositories;
-using System;
 
 namespace Application.Queries
 {

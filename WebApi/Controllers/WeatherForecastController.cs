@@ -1,8 +1,6 @@
-﻿using System;
-using Application.Commands.WeatherForecastCommands;
+﻿using Application.Commands.WeatherForecastCommands;
 using Application.Models;
 using Application.Queries;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

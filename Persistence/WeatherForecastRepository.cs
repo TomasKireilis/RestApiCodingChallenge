@@ -1,8 +1,8 @@
 ﻿using Application.Repositories;
 using Domain;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
-using Microsoft.Extensions.Logging;
 
 namespace Persistence
 {

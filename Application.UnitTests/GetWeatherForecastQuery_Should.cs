@@ -1,10 +1,9 @@
-using Application.Commands.WeatherForecastCommands;
 using Application.Models;
+using Application.Queries;
 using Application.Repositories;
 using Domain;
 using Moq;
 using System;
-using Application.Queries;
 using Xunit;
 
 namespace Application.UnitTests

@@ -6,17 +6,20 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Services.WeatherForecast
 {
     public class WeatherForecastService : IWeatherForecastService
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<WeatherForecastService> _logger;
         private readonly string _requestBaseUrl;
 
-        public WeatherForecastService(HttpClient httpClient, string requestBaseUrl)
+        public WeatherForecastService(HttpClient httpClient, ILogger<WeatherForecastService> logger, string requestBaseUrl)
         {
             _httpClient = httpClient;
+            _logger = logger;
 
             _requestBaseUrl = requestBaseUrl;
         }
@@ -42,7 +45,7 @@ namespace Infrastructure.Services.WeatherForecast
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError("Error while fetching data from weather forecast api. {@error}", e.Message);
                 throw;
             }
 
@@ -65,7 +68,7 @@ namespace Infrastructure.Services.WeatherForecast
 
                 return weatherForecastModel;
             }
-            Console.WriteLine($"No data found in {locationId} time: {time}");
+            _logger.LogWarning("No data found in {@locationId} time: {@time}", locationId, time);
 
             return null;
         }

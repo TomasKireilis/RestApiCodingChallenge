@@ -4,6 +4,7 @@ using Application.Repositories;
 using Domain;
 using Moq;
 using System;
+using Microsoft.Extensions.Logging;
 using Xunit;
 
 namespace Application.UnitTests
@@ -33,8 +34,9 @@ namespace Application.UnitTests
             };
 
             var repositoryMock = new Mock<IWeatherForecastRepository>();
+            var loggerMock = new Mock<ILogger<CreateWeatherForecastCommand>>();
 
-            var createWeatherForecastCommand = new CreateWeatherForecastCommand(repositoryMock.Object);
+            var createWeatherForecastCommand = new CreateWeatherForecastCommand(repositoryMock.Object, loggerMock.Object);
 
             //act
             createWeatherForecastCommand.Execute(forecastApplicationModel);
